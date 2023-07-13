@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <style>
+    /* Additional CSS styles */
+
+    /* Set the height of rows 6 and 7 to accommodate 5 rows of text */
+    table tr:nth-child(6) input,
+    table tr:nth-child(7) input {
+      height: 10em;
+      white-space: pre-wrap; /* Allow text wrapping */
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <!-- Your HTML content -->
+
+  <table>
+    <!-- Table rows -->
+        <tr>
+          <td>Name</td>
+          <td><input type="text" placeholder="Enter value"></td>
+        </tr>
+        <tr>
+          <td>Position</td>
+          <td><input type="text" placeholder="Enter value"></td>
+        </tr>
+        <tr>
+          <td>Phone</td>
+          <td><input type="text" pattern="\d{3}-\d{3}-\d{4}" placeholder="000-000-0000"></td>
+        </tr>
+        <tr>
+          <td>Period</td>
+          <td><input type="text" placeholder="Enter value"></td>
+        </tr>
+        <tr>
+          <td>Tax Type</td>
+          <td><input type="text" oninput="this.value = this.value.toUpperCase();" placeholder="Enter value"></td>
+        </tr>
+        <tr>
+          <td>Note</td>
+          <td><input type="text" placeholder="Enter value"></td>
+        </tr>
+    <tr>
+      <td>Note to be Copied</td>
+      <td><input type="text" id="outputField" readonly></td>
+    </tr>
+  </table>
+  <button id="copyButton">Copy Note</button>
+  <button id="clearButton">Clear Form</button>
+
+  <script>
+    // JavaScript code goes here
+
+    // Get references to the relevant input fields
+    const row5Col2Input = document.querySelector("table tr:nth-child(5) td:nth-child(2) input");
+    const row4Col2Input = document.querySelector("table tr:nth-child(4) td:nth-child(2) input");
+    const row1Col2Input = document.querySelector("table tr:nth-child(1) td:nth-child(2) input");
+    const row2Col2Input = document.querySelector("table tr:nth-child(2) td:nth-child(2) input");
+    const row3Col2Input = document.querySelector("table tr:nth-child(3) td:nth-child(2) input");
+    const row6Col2Input = document.querySelector("table tr:nth-child(6) td:nth-child(2) input");
+
+    // Function to compile and output the information
+    function compileInformation() {
+      const row5Col2Value = row5Col2Input.value || ""; // Handle empty input
+      const row4Col2Value = row4Col2Input.value || "";
+      const row1Col2Value = row1Col2Input.value || "";
+      const row2Col2Value = row2Col2Input.value || "";
+      const row3Col2Value = formatPhoneNumber(row3Col2Input.value) || "";
+      const row6Col2Value = row6Col2Input.value || "";
+
+      const output = `${row5Col2Value} ${row4Col2Value} - ${row1Col2Value} (${row2Col2Value} ${row3Col2Value}) - ${row6Col2Value}`;
+
+      document.getElementById("outputField").value = output;
+    }
+
+    // Call the function initially
+    compileInformation();
+
+    // Add event listeners to the input fields to update the output on change
+    row5Col2Input.addEventListener("input", compileInformation);
+    row4Col2Input.addEventListener("input", compileInformation);
+    row1Col2Input.addEventListener("input", compileInformation);
+    row2Col2Input.addEventListener("input", compileInformation);
+    row3Col2Input.addEventListener("input", compileInformation);
+    row6Col2Input.addEventListener("input", compileInformation);
+
+    // Function to copy the note to clipboard
+    function copyNote() {
+      outputField.select();
+      document.execCommand("copy");
+
+    }
+
+    // Function to clear form inputs
+    function clearForm() {
+      row5Col2Input.value = "";
+      row4Col2Input.value = "";
+      row1Col2Input.value = "";
+      row2Col2Input.value = "";
+      row3Col2Input.value = "";
+      row6Col2Input.value = "";
+      compileInformation();
+    }
+
+    // Add event listeners to the buttons
+    copyButton.addEventListener("click", copyNote);
+    clearButton.addEventListener("click", clearForm);
+
+    // Function to format phone number as "000-000-0000"
+    function formatPhoneNumber(phoneNumber) {
+      // Remove any non-digit characters from the phone number
+      const digitsOnly = phoneNumber.replace(/\D/g, "");
+
+      // Format the phone number as "000-000-0000"
+      const formattedPhoneNumber = digitsOnly.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+
+      return formattedPhoneNumber;
+    }
+  </script>
+</body>
+</html>
